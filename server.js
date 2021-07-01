@@ -29,17 +29,51 @@ async function questions() {
       name: "beginChoice",
       message: "What would you like to do?",
       choices: [
-        "Add department",
-        "Add role",
-        "Add employee",
         "View ALL departments",
         "View ALL roles",
         "View ALL employees",
+        "Add department",
+        "Add role",
+        "Add employee",
         "Update employee role",
         "Exit program",
       ],
     },
   ]);
+
+  switch (programStartChoice.beginChoice) {
+    case "View ALL departments":
+      viewAllDepartments();
+      break;
+
+    case "View ALL employees":
+      viewAllEmployees();
+      break;
+
+    case "View ALL roles":
+      viewAllRoles();
+      break;
+
+    case "Add department":
+      addDepartment();
+      break;
+
+    case "Add role":
+      addRole();
+      break;
+
+    case "Add employee":
+      addEmployee();
+      break;
+
+    case "Update employee role":
+      updateEmployeeRole();
+      break;
+
+    case "Exit program":
+      exitProgram();
+      break;
+  }
 }
 
 //function that is first invoked
