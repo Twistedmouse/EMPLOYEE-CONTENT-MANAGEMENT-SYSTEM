@@ -93,7 +93,7 @@ async function startInitChoices() {
       viewAllRoles();
       break;
 
-    case "Add role":
+    case "Add Role":
       addRole();
       break;
 
@@ -133,35 +133,6 @@ async function startInitChoices() {
   }
 }
 
-//
-async function questions() {
-  const programStartChoice = await inquirer.prompt([
-    {
-      type: "rawlist",
-      name: "beginChoice",
-      message: "What would you like to do?",
-      choices: [
-        "View ALL roles",
-        "View ALL employees",
-
-        "Add role",
-        "Add employee",
-        //add remove for each department role and employee
-        "Update/remove employee role",
-        "Exit program",
-      ],
-    },
-    {
-      when: (programStartChoice) =>
-        programStartChoice.beginChoice === "Update/remove employee role",
-      type: "list",
-      name: "updateChoice",
-      message: "Update or remove:",
-      choices: ["Update", "Remove"],
-    },
-  ]);
-}
-
 // adds department to db
 async function addDepartment() {
   const addDepartmentResponse = await inquirer.prompt([
@@ -186,13 +157,49 @@ async function addDepartment() {
 
 // add/insert functions
 async function addRole() {
+  const departmentArrayFromDb = await connection.query(
+    "SELECT * from departments"
+  );
+  console.log(departmentArrayFromDb);
+  const departmentArray = await departmentArrayFromDb.map((departments) => ({
+    name: departments.department_name,
+    value: departments.id,
+  }));
+
   const addRoleResponse = await inquirer.prompt([
     {
       type: "input",
       name: "name",
       message: "Enter the role you would like to add:",
     },
+    {
+      type: "input",
+      name: "salary",
+      message: "Input your salary:",
+    },
+    {
+      type: "list",
+      name: "department_id",
+      message: "Which department does this role belong to:",
+      choices: [departmentArray],
+    },
   ]);
+  try {
+    connection.query(
+      "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)",
+      [
+        addRoleResponse.name,
+        addRoleResponse.salary,
+        addRoleResponse.department_id,
+      ]
+    );
+    console.log("\n New employee added to employee_contentDB \n");
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 async function addEmployee() {
@@ -212,17 +219,17 @@ async function viewAllRoles() {}
 
 async function viewAllEmployees() {}
 
-//make update/remove functions for each catagory
+//make update/remove functions for each category
 
 function backToStartInitChoices() {
   return startInitChoices();
 }
 // exit function
-async function exitProgram() {
-  if (initChoice.exitProgram === on) {
-    connection.end();
-  } else {
+function exitProgram() {
+  if (initChoice.exitProgram === false) {
     return startInitChoices();
+  } else {
+    connection.end();
   }
 }
 

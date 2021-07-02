@@ -61,6 +61,6 @@ INSERT INTO
 VALUES
   ("Bill", "Ted", 4, 4);
 INSERT INTO
-  employees(first_name, last_name, role_id, manager_id)
+  employees(first_name, last_name, role_id, manager_id);
 VALUES
   ("Hank", "Joans", 4, 4);
