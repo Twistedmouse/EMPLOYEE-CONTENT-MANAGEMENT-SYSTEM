@@ -48,7 +48,7 @@ async function questions() {
       addEmployee();
       break;
 
-    case "Update employee role":
+    case "Update/remove employee role":
       updateEmployeeRole();
       break;
 
@@ -63,12 +63,13 @@ async function addDepartment() {
     {
       type: "input",
       name: "name",
-      message: "Name of the department you would like to add:",
+      message: "Enter the name of the department you would like to add:",
     },
   ]);
-  connection.query(INSERT INTO)
+  // connection.query(INSERT INTO)
 }
 
+// add/insert functions
 async function addRole() {
   const addRoleResponse = await inquirer.prompt([
     {
@@ -79,15 +80,41 @@ async function addRole() {
   ]);
 }
 
+async function addEmployee() {
+  const addEmployeeRequest = await inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "Enter the name of the employee you would like to add:",
+    },
+  ]);
+}
+
+// View functions
+async function viewAllEmployees() {}
+
+async function viewAllRoles() {}
+
+async function viewAllEmployees() {}
+
+// employee update function
+async function updateEmployeeRole() {}
+
+// exit function
+async function exitProgram() {}
+
 //function that is first invoked
 function init() {
   console.log(
     String.raw`
-       _____  _____ ____  _    _    _____ _____ _      _____ ____  ____  _____  ____  ____
-      /__ __\/  __//  _ \/ \__/ |  /  __//  __// \  /|/  __//  __\/  _ \/__ __\/  _ \/  __\
-        / \  |  \  | / \|| |\/| |  | |  _|  \  | |\ |||  \  |  \/|| / \|  / \  | / \||  \/|
-        | |  |  /_ | | ||| |  | |  | |_//|  /_ | | \|||  /_ |    /| |-||  | |  | \_/||    /  /\
-        \_/  \____\\_/ \|\_/  \_|  \____||____\\_/  \|\____\\_/\_\\_/ \|  \_/  \____/\_/\_\  \/ `
+====================================================================================================
+ _____ _    _  ____  _     ____ ___  _ _____ _____     _    _  ____  _      ____  _____ _____ ____ 
+/  __// \__/ |/  __\/ \   /  _ \\  \///  __//  __/    / \__/ |/  _ \/ \  /|/  _ \/  __//  __//  __\
+|  \  | |\/| ||  \/|| |   | / \| \  / |  \  |  \      | |\/| || / \|| |\ ||| / \|| |  _|  \  |  \/|
+|  /_ | |  | ||  __/| |_/\| \_/| / /  |  /_ |  /_     | |  | || |-||| | \||| |-||| |_//|  /_ |    /
+\____\\_/  \_|\_/   \____/\____//_/   \____\\____\    \_/  \ |\_/ \|\_/  \|\_/ \|\____\\____\\_/\_\
+====================================================================================================
+  `
   );
   setTimeout(function () {
     questions();

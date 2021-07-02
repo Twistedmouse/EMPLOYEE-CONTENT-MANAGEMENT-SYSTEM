@@ -1,6 +1,6 @@
 // IMPORTANT: elaborate what to do on each green todo: in more detail.
 //            eg what to put into inquirer based on spec
-// TODO: on start init display ascii title.
+// TODO: :DONE: on start init display ascii title.
 // todo: with inquirer print ascii title into the console.
 
 // TODO: Build a command-line application that at a minimum allows the user to:
@@ -20,8 +20,8 @@
 //            THEN: each choice of employees is listed.
 //            THEN: list role or department.
 //            THEN: input the updated information.
-// todo: remove employee
-//      task: WHEN: remove is selected from the terminal.
+//      todo: remove employee (included in update)
+//           task: WHEN: remove is selected from the terminal.
 //            THEN: employee object is removed from list todo: and db
 
 // TODO: create data base to the spec in mysql.
