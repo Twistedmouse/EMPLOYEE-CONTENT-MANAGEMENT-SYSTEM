@@ -1,7 +1,8 @@
-const mysql2 = require("mysql2/promise");
+// const mysql2 = require("mysql2/promise");
+const mysql = require("mysql");
 
 //connection info for mysql
-const connection = mysql2.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
 
   port: 3306,
