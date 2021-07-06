@@ -1,5 +1,6 @@
 require("dotenv").config();
-const connection = require("./src/connection");
+let connection;
+const mysql2 = require("mysql2/promise");
 const inquirer = require("inquirer");
 const tableize = require("console.table");
 
@@ -59,9 +60,12 @@ async function startInitChoices() {
     },
   ]);
 
-  switch (initChoice.initChoices) {
-    case "exitProgram":
+  switch (initChoice.exitProgram) {
+    case true:
       exitProgram();
+      break;
+    default:
+      startInitChoices();
       break;
   }
 
@@ -143,9 +147,10 @@ async function addDepartment() {
     },
   ]);
   try {
-    connection.query("INSERT INTO departments (department_name) VALUES (?)", [
-      addDepartmentResponse.name,
-    ]);
+    await connection.query(
+      "INSERT INTO departments (department_name) VALUES (?)",
+      [addDepartmentResponse.name]
+    );
     console.log("\n New department added to employee_contentDB \n");
     setTimeout(function () {
       startInitChoices();
@@ -157,11 +162,12 @@ async function addDepartment() {
 
 // add/insert functions
 async function addRole() {
-  const departmentArrayFromDb = await connection.query(
+  //IMPORTANT not getting array from deparntments
+  let departmentArrayFromDb = await connection.query(
     "SELECT * from departments"
   );
-  console.log(departmentArrayFromDb);
-  const departmentArray = await departmentArrayFromDb.map((departments) => ({
+
+  let departmentArray = await departmentArrayFromDb.map((departments) => ({
     name: departments.department_name,
     value: departments.id,
   }));
@@ -185,7 +191,7 @@ async function addRole() {
     },
   ]);
   try {
-    connection.query(
+    await connection.query(
       "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)",
       [
         addRoleResponse.name,
@@ -226,15 +232,23 @@ function backToStartInitChoices() {
 }
 // exit function
 function exitProgram() {
-  if (initChoice.exitProgram === false) {
-    return startInitChoices();
-  } else {
-    connection.end();
-  }
+  connection.end();
+  process.exit();
 }
 
 //function that is first invoked
-function init() {
+async function init() {
+  connection = await mysql2.createConnection({
+    host: "localhost",
+
+    port: 3306,
+
+    user: process.env.DB_USER,
+
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  });
+
   console.log(
     String.raw`
 ======================================================================================================

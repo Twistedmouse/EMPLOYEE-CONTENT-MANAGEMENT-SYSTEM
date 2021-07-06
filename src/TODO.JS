@@ -25,7 +25,7 @@
 //            THEN: employee object is removed from list todo: and db
 
 // TODO: create data base to the spec in mysql.
-// todo: create db that can be connected to and perform queries
+// todo: :DONE: create db that can be connected to and perform queries
 // todo: use inquirer to interact with the user via the command line interface
 // todo: Use console.table to print MySQL rows to the console.
 // todo: have a separate file containing functions for performing specific SQL queries you'll need to use.
