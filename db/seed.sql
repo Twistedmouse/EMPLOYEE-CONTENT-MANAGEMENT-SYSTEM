@@ -45,6 +45,10 @@ INSERT INTO
 VALUES
   ("Engineer", 80000, 4);
 INSERT INTO
+  roles(title, salary, department_id)
+VALUES
+  ("Lead Engineer", 100000, 4);
+INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
   ("Ben", "John", 1, 1);

@@ -1,8 +1,21 @@
 require("dotenv").config();
-let connection;
-const mysql2 = require("mysql2/promise");
+const mysql2 = require("mysql2");
 const inquirer = require("inquirer");
 const tableize = require("console.table");
+const util = require("util");
+
+let connection = mysql2.createConnection({
+  host: "localhost",
+
+  port: 3306,
+
+  user: process.env.DB_USER,
+
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+connection.connect();
+connection.query = util.promisify(connection.query);
 
 // array of questions to build out the tables and data for database
 async function startInitChoices() {
@@ -14,7 +27,7 @@ async function startInitChoices() {
       choices: ["Departments", "Roles", "Employees", "Exit program"],
     },
     {
-      when: (initChoice) => initChoice.initChoices === "Departments",
+      when: (answers) => answers.initChoices === "Departments",
       type: "rawlist",
       name: "departmentsChoices",
       message: "Departments Options:",
@@ -27,7 +40,7 @@ async function startInitChoices() {
       ],
     },
     {
-      when: (initChoice) => initChoice.initChoices === "Roles",
+      when: (answers) => answers.initChoices === "Roles",
       type: "rawlist",
       name: "rolesChoices",
       message: "Roles Options:",
@@ -40,7 +53,7 @@ async function startInitChoices() {
       ],
     },
     {
-      when: (initChoice) => initChoice.initChoices === "Employees",
+      when: (answers) => answers.initChoices === "Employees",
       type: "rawlist",
       name: "EmployeesChoices",
       message: "Employees Options:",
@@ -52,21 +65,10 @@ async function startInitChoices() {
         "back",
       ],
     },
-    {
-      when: (initChoice) => initChoice.initChoices === "Exit program",
-      type: "confirm",
-      name: "exitProgram",
-      message: "Are you sure you would like to exit?",
-    },
   ]);
 
-  switch (initChoice.exitProgram) {
-    case true:
-      exitProgram();
-      break;
-    default:
-      startInitChoices();
-      break;
+  if (initChoice.initChoices === "Exit program") {
+    exitProgram();
   }
 
   //Departments switch
@@ -88,7 +90,9 @@ async function startInitChoices() {
       break;
 
     case "back":
-      backToStartInitChoices();
+      startInitChoices();
+      break;
+    default:
       break;
   }
   //Roles switch
@@ -110,7 +114,9 @@ async function startInitChoices() {
       break;
 
     case "back":
-      backToStartInitChoices();
+      startInitChoices();
+      break;
+    default:
       break;
   }
   //Employees switch
@@ -119,7 +125,7 @@ async function startInitChoices() {
       viewAllEmployees();
       break;
 
-    case "Add employee":
+    case "Add Employee":
       addEmployee();
       break;
 
@@ -132,29 +138,33 @@ async function startInitChoices() {
       break;
 
     case "back":
-      backToStartInitChoices();
+      startInitChoices();
+      break;
+    default:
       break;
   }
 }
 
 // adds department to db
 async function addDepartment() {
-  const addDepartmentResponse = await inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "Enter the name of the department you would like to add:",
-    },
-  ]);
   try {
-    await connection.query(
+    const addDepartmentResponse = await inquirer.prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Enter the name of the department you would like to add:",
+      },
+    ]);
+
+    const query = await connection.query(
       "INSERT INTO departments (department_name) VALUES (?)",
       [addDepartmentResponse.name]
     );
+    console.log(query);
     console.log("\n New department added to employee_contentDB \n");
-    setTimeout(function () {
-      startInitChoices();
-    }, 1000);
+    // setTimeout(function () {
+    await startInitChoices();
+    // }, 1000);
   } catch (error) {
     console.error(error.message);
   }
@@ -162,36 +172,36 @@ async function addDepartment() {
 
 // add/insert functions
 async function addRole() {
-  //IMPORTANT not getting array from deparntments
-  let departmentArrayFromDb = await connection.query(
-    "SELECT * from departments"
-  );
-
-  let departmentArray = await departmentArrayFromDb.map((departments) => ({
-    name: departments.department_name,
-    value: departments.id,
-  }));
-
-  const addRoleResponse = await inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "Enter the role you would like to add:",
-    },
-    {
-      type: "input",
-      name: "salary",
-      message: "Input your salary:",
-    },
-    {
-      type: "list",
-      name: "department_id",
-      message: "Which department does this role belong to:",
-      choices: [departmentArray],
-    },
-  ]);
   try {
-    await connection.query(
+    let departmentArrayFromDb = await connection.query(
+      "SELECT * from departments"
+    );
+
+    let departmentArray = await departmentArrayFromDb.map((departments) => ({
+      name: departments.department_name,
+      value: departments.id,
+    }));
+
+    const addRoleResponse = await inquirer.prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Enter the role you would like to add:",
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "Input your salary:",
+      },
+      {
+        type: "list",
+        name: "department_id",
+        message: "Which department does this role belong to:",
+        choices: departmentArray,
+      },
+    ]);
+
+    const query = await connection.query(
       "INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)",
       [
         addRoleResponse.name,
@@ -199,23 +209,60 @@ async function addRole() {
         addRoleResponse.department_id,
       ]
     );
-    console.log("\n New employee added to employee_contentDB \n");
-    setTimeout(function () {
-      startInitChoices();
-    }, 1000);
+    console.log("\n------- New role added to employee_contentDB -------\n");
+    // setTimeout(function () {
+    startInitChoices();
+    // }, 1000);
   } catch (error) {
     console.error(error.message);
   }
 }
 
 async function addEmployee() {
-  const addEmployeeRequest = await inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "Enter the name of the employee you would like to add:",
-    },
-  ]);
+  try {
+    const rolesArrayFromDb = await connection.query("SELECT * FROM roles");
+    const rolesArray = rolesArrayFromDb.map((role) => ({
+      name: role.name,
+      value: role.id,
+    }));
+    // const employeeArrayFromDb = await connection.query("SELECT * FROM roles");
+    // const employeeArray = employeeArrayFromDb.map((role) => ({ role.manager_id }));
+
+    const addEmployeeRequest = await inquirer.prompt([
+      {
+        type: "input",
+        name: "first_name",
+        message: "Enter the first name of the employee you would like to add:",
+      },
+      {
+        type: "input",
+        name: "last_name",
+        message: "Enter the last name of the employee you would like to add:",
+      },
+      {
+        type: "list",
+        name: "role_id",
+        message: "Pease select this employees role:",
+        choices: rolesArray,
+      },
+    ]);
+
+    const query = await connection.query(
+      "INSERT INTO roles (first_name, last_name, role_id, manager_id) VALUES (?,?,?)",
+      [
+        addEmployeeRequest.first_name,
+        addEmployeeRequest.last_name,
+        addEmployeeRequest.role_id,
+        addEmployeeRequest.manager_id,
+      ]
+    );
+    console.log("\n New employee added to employee_contentDB \n");
+    // setTimeout(function () {
+    startInitChoices();
+    // }, 1000);
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 // View functions
@@ -227,9 +274,6 @@ async function viewAllEmployees() {}
 
 //make update/remove functions for each category
 
-function backToStartInitChoices() {
-  return startInitChoices();
-}
 // exit function
 function exitProgram() {
   connection.end();
@@ -237,18 +281,7 @@ function exitProgram() {
 }
 
 //function that is first invoked
-async function init() {
-  connection = await mysql2.createConnection({
-    host: "localhost",
-
-    port: 3306,
-
-    user: process.env.DB_USER,
-
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  });
-
+function init() {
   console.log(
     String.raw`
 ======================================================================================================
