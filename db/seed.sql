@@ -34,8 +34,17 @@ VALUES
   ("Sales Lead", 50000, 1);
 INSERT INTO
   roles(title, salary, department_id)
+VALUES("Sales Rep", 40000, 1);
+INSERT INTO
+  roles(title, salary, department_id)
+VALUES("Head Lawyer", 120000, 2);
+INSERT INTO
+  roles(title, salary, department_id)
 VALUES
   ("Lawyer", 80000, 2);
+INSERT INTO
+  roles(title, salary, department_id)
+VALUES("Lead Accountant", 100000, 3);
 INSERT INTO
   roles(title, salary, department_id)
 VALUES
@@ -43,11 +52,11 @@ VALUES
 INSERT INTO
   roles(title, salary, department_id)
 VALUES
-  ("Engineer", 80000, 4);
+  ("Lead Engineer", 100000, 4);
 INSERT INTO
   roles(title, salary, department_id)
 VALUES
-  ("Lead Engineer", 100000, 4);
+  ("Engineer", 80000, 4);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
@@ -65,6 +74,6 @@ INSERT INTO
 VALUES
   ("Bill", "Ted", 4, 4);
 INSERT INTO
-  employees(first_name, last_name, role_id, manager_id);
+  employees(first_name, last_name, role_id, manager_id)
 VALUES
   ("Hank", "Joans", 4, 4);

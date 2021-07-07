@@ -4,6 +4,7 @@ const inquirer = require("inquirer");
 const tableize = require("console.table");
 const util = require("util");
 
+//db connection
 let connection = mysql2.createConnection({
   host: "localhost",
 
@@ -14,6 +15,7 @@ let connection = mysql2.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
 });
+// connects to the connection and makes connection.query work as a promise
 connection.connect();
 connection.query = util.promisify(connection.query);
 
@@ -160,11 +162,13 @@ async function addDepartment() {
       "INSERT INTO departments (department_name) VALUES (?)",
       [addDepartmentResponse.name]
     );
-    console.log(query);
-    console.log("\n New department added to employee_contentDB \n");
-    // setTimeout(function () {
-    await startInitChoices();
-    // }, 1000);
+
+    console.log(
+      "\n ------- New department added to employee_contentDB ------- \n"
+    );
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
   } catch (error) {
     console.error(error.message);
   }
@@ -209,10 +213,10 @@ async function addRole() {
         addRoleResponse.department_id,
       ]
     );
-    console.log("\n------- New role added to employee_contentDB -------\n");
-    // setTimeout(function () {
-    startInitChoices();
-    // }, 1000);
+    console.log("\n ------- New role added to employee_contentDB -------\n");
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
   } catch (error) {
     console.error(error.message);
   }
@@ -222,7 +226,7 @@ async function addEmployee() {
   try {
     const rolesArrayFromDb = await connection.query("SELECT * FROM roles");
     const rolesArray = rolesArrayFromDb.map((role) => ({
-      name: role.name,
+      name: role.title,
       value: role.id,
     }));
     // const employeeArrayFromDb = await connection.query("SELECT * FROM roles");
@@ -245,10 +249,14 @@ async function addEmployee() {
         message: "Pease select this employees role:",
         choices: rolesArray,
       },
+      // {
+      //are you the manager/ who is the employees manager prompt?
+      //if true make role_id manager_id if false make null
+      // },
     ]);
-
+    console.log(addEmployeeRequest);
     const query = await connection.query(
-      "INSERT INTO roles (first_name, last_name, role_id, manager_id) VALUES (?,?,?)",
+      "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
       [
         addEmployeeRequest.first_name,
         addEmployeeRequest.last_name,
@@ -256,10 +264,12 @@ async function addEmployee() {
         addEmployeeRequest.manager_id,
       ]
     );
-    console.log("\n New employee added to employee_contentDB \n");
-    // setTimeout(function () {
-    startInitChoices();
-    // }, 1000);
+    console.log(
+      "\n ------- New employee added to employee_contentDB ------- \n"
+    );
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
   } catch (error) {
     console.error(error.message);
   }
@@ -272,7 +282,7 @@ async function viewAllRoles() {}
 
 async function viewAllEmployees() {}
 
-//make update/remove functions for each category
+//make update/remove functions for each category below
 
 // exit function
 function exitProgram() {

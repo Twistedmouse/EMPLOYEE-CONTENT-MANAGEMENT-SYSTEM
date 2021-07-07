@@ -1,17 +1,17 @@
 // IMPORTANT: elaborate what to do on each green todo: in more detail.
 //            eg what to put into inquirer based on spec
 // TODO: :DONE: on start init display ascii title.
-// todo: with inquirer print ascii title into the console.
+// todo: :DONE:with inquirer print ascii title into the console.
 
 // TODO: Build a command-line application that at a minimum allows the user to:
 // todo: Add departments, roles, employees
 //      NOTE:this would made with inquirer and then apart of the database
-//      task: Add a department with max characters of (30). NOTE: choosing a manager will choose the department.
-//      task: Add a role with max characters of (30), salary (decimal), department_id (integer)
-//              IF: manager is chosen
+//      task: :DONE:Add a department with max characters of (30). NOTE: choosing a manager will choose the department.
+//      task: :DONE:Add a role with max characters of (30), salary (decimal), department_id (integer)
+//      task: Add employees with first_name and last_name max char(30), role_id (integer), manager_id (integer)
+//             IF: manager is chosen
 //              THEN: prompt asking from which department.
 //              THEN: assign that manager as a manager of that department.
-//      task: Add employees with first_name and last_name max char(30), role_id (integer), manager_id (integer)
 // todo: View departments, roles, employees
 //      task: choices: view by - department_id, role_id or employees.
 //            output: displays a table in the terminal with chosen data.
@@ -26,7 +26,7 @@
 
 // TODO: create data base to the spec in mysql.
 // todo: :DONE: create db that can be connected to and perform queries
-// todo: use inquirer to interact with the user via the command line interface
+// todo: :DONE:use inquirer to interact with the user via the command line interface
 // todo: Use console.table to print MySQL rows to the console.
 // todo: have a separate file containing functions for performing specific SQL queries you'll need to use.
 //       Could a constructor function or a class be helpful for organizing these?
