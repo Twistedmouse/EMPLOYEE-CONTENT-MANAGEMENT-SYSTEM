@@ -24,7 +24,6 @@ async function startInitChoices() {
       choices: [
         "View ALL departments",
         "Add department",
-        "Update department",
         "Remove department",
         "back",
       ],
@@ -69,10 +68,6 @@ async function startInitChoices() {
 
     case "Add department":
       addDepartment();
-      break;
-
-    case "Update department":
-      updateDepartment();
       break;
 
     case "Remove department":
@@ -302,7 +297,14 @@ function viewAllEmployees() {
   });
 }
 
-//make update/remove functions for each category below=======================================================
+//update departments function=======================================================
+async function updateRole() {
+  const rolesData = await connection.query("SELECT * FROM roles");
+  const rolesArray = rolesData.map((roles) => ({
+    name: roles.title,
+    value: roles.id,
+  }));
+}
 
 // exit function =============================================================================================
 function exitProgram() {
