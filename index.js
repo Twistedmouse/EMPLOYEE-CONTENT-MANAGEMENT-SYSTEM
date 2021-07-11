@@ -87,7 +87,7 @@ async function startInitChoices() {
   }
   //Roles switch========================================================================================
   switch (initChoice.rolesChoices) {
-    case "View ALL roles":
+    case "View ALL Roles":
       viewAllRoles();
       break;
 
@@ -95,11 +95,11 @@ async function startInitChoices() {
       addRole();
       break;
 
-    case "Update role":
+    case "Update Role":
       updateRole();
       break;
 
-    case "Remove role":
+    case "Remove Role":
       removeRole();
       break;
 
@@ -280,7 +280,7 @@ function viewAllDepartments() {
 // view roles db data in a table format=======================================================================
 function viewAllRoles() {
   connection.query("SELECT * FROM roles", (error, res) => {
-    if (error) throw error;
+    if (error) console.error(error);
     console.log("\nROLES TABLE:");
     console.table(res);
     console.log("\n");
