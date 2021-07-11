@@ -1,25 +1,13 @@
 require("dotenv").config();
-const mysql2 = require("mysql2");
 const inquirer = require("inquirer");
-const tableize = require("console.table");
 const util = require("util");
+const connection = require("./config/connection");
 
-//db connection
-let connection = mysql2.createConnection({
-  host: "localhost",
-
-  port: 3306,
-
-  user: process.env.DB_USER,
-
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
-// connects to the connection and makes connection.query work as a promise
+// connects to the connection and makes connection.query work as a promise=================================
 connection.connect();
 connection.query = util.promisify(connection.query);
 
-// array of questions to build out the tables and data for database
+// array of questions to build out the tables and data for database========================================
 async function startInitChoices() {
   const initChoice = await inquirer.prompt([
     {
@@ -73,7 +61,7 @@ async function startInitChoices() {
     exitProgram();
   }
 
-  //Departments switch
+  //Departments switch===================================================================================
   switch (initChoice.departmentsChoices) {
     case "View ALL departments":
       viewAllDepartments();
@@ -97,7 +85,7 @@ async function startInitChoices() {
     default:
       break;
   }
-  //Roles switch
+  //Roles switch========================================================================================
   switch (initChoice.rolesChoices) {
     case "View ALL roles":
       viewAllRoles();
@@ -121,7 +109,7 @@ async function startInitChoices() {
     default:
       break;
   }
-  //Employees switch
+  //Employees switch=======================================================================================
   switch (initChoice.EmployeesChoices) {
     case "View ALL employees":
       viewAllEmployees();
@@ -147,7 +135,7 @@ async function startInitChoices() {
   }
 }
 
-// adds department to db
+// adds department to db=====================================================================================
 async function addDepartment() {
   try {
     const addDepartmentResponse = await inquirer.prompt([
@@ -174,7 +162,7 @@ async function addDepartment() {
   }
 }
 
-// add/insert functions
+// add/insert role to db=====================================================================================
 async function addRole() {
   try {
     let departmentArrayFromDb = await connection.query(
@@ -222,6 +210,7 @@ async function addRole() {
   }
 }
 
+// add an employee to the db================================================================================
 async function addEmployee() {
   try {
     const rolesArrayFromDb = await connection.query("SELECT * FROM roles");
@@ -249,9 +238,9 @@ async function addEmployee() {
         message: "Pease select this employees role:",
         choices: rolesArray,
       },
-      // {
+      // { IMPORTANTTODO:
       //are you the manager/ who is the employees manager prompt?
-      //if true make role_id manager_id if false make null
+      //if true make role_id manager_id if false make null try list:choices:manger? not manager?
       // },
     ]);
     console.log(addEmployeeRequest);
@@ -275,32 +264,53 @@ async function addEmployee() {
   }
 }
 
-// View functions
-async function viewAllEmployees() {}
+// View departments db data in table format ======================================================================
+function viewAllDepartments() {
+  connection.query("SELECT * FROM departments", (error, res) => {
+    if (error) throw error;
+    console.log("\nDEPARTMENTS TABLE:");
+    console.table(res);
+    console.log("\n");
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
+  });
+}
 
-async function viewAllRoles() {}
+// view roles db data in a table format=======================================================================
+function viewAllRoles() {
+  connection.query("SELECT * FROM roles", (error, res) => {
+    if (error) throw error;
+    console.log("\nROLES TABLE:");
+    console.table(res);
+    console.log("\n");
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
+  });
+}
+// view employees db data in a table format===================================================================
+function viewAllEmployees() {}
 
-async function viewAllEmployees() {}
+//make update/remove functions for each category below=======================================================
 
-//make update/remove functions for each category below
-
-// exit function
+// exit function =============================================================================================
 function exitProgram() {
   connection.end();
   process.exit();
 }
 
-//function that is first invoked
+//function that is first invoked =============================================================================
 function init() {
   console.log(
     String.raw`
-======================================================================================================
-  _____ _    _  ____  _     ____ ___  _ _____ _____     _    _  ____   _    _  ____   _____ _____ ____ 
- /  __// \__/ |/  __\/ \   /  _ \\  \///  __//  __/    / \__/ |/  _ \ / \  / |/  _  \/  __//  __//  __\
- |  \  | |\/| ||  \/|| |   | / \| \  / |  \  |  \      | |\/| || / \ || |\ | || / \| | |  _|  \  |  \/|
- |  /_ | |  | ||  __/| |_/\| \_/| / /  |  /_ |  /_     | |  | || |-| || | \| || |-|| | |_//|  /_ |    /
- \____\\_/  \_|\_/   \____/\____//_/   \____\\____\    \_/  \_|\_/ \_|\_/  \_|\_/  \_|\___\\____\\_/\_\
-======================================================================================================
+=======================================================================================================
+  _____ _    _  ____  _     ____ ___  _ _____ _____     _    _  ____   _    _  ____  _____ _____ ____ 
+ /  __// \__/ |/  __\/ \   /  _ \\  \///  __//  __/    / \__/ |/  _ \ / \  / |/  _ \/  __//  __//  __\
+ |  \  | |\/| ||  \/|| |   | / \| \  / |  \  |  \      | |\/| || / \ || |\ | || / \ | |  _|  \  |  \/|
+ |  /_ | |  | ||  __/| |_/\| \_/| / /  |  /_ |  /_     | |  | || |-| || | \| || |-| | |_//|  /_ |    /
+ \____\\_/  \_|\_/   \____/\____//_/   \____\\____\    \_/  \_|\_/ \_|\_/  \_|\_/ \_|\___\\____\\_/\_\
+=======================================================================================================
   `
   );
   setTimeout(function () {
