@@ -111,7 +111,7 @@ async function startInitChoices() {
   }
   //Employees switch=======================================================================================
   switch (initChoice.EmployeesChoices) {
-    case "View ALL employees":
+    case "View ALL Employees":
       viewAllEmployees();
       break;
 
@@ -119,11 +119,11 @@ async function startInitChoices() {
       addEmployee();
       break;
 
-    case "Update employee":
+    case "Update Employee":
       updateEmployee();
       break;
 
-    case "Remove employee":
+    case "Remove Employee":
       removeEmployee();
       break;
 
@@ -267,7 +267,7 @@ async function addEmployee() {
 // View departments db data in table format ======================================================================
 function viewAllDepartments() {
   connection.query("SELECT * FROM departments", (error, res) => {
-    if (error) throw error;
+    if (error) console.error(error);
     console.log("\nDEPARTMENTS TABLE:");
     console.table(res);
     console.log("\n");
@@ -290,7 +290,17 @@ function viewAllRoles() {
   });
 }
 // view employees db data in a table format===================================================================
-function viewAllEmployees() {}
+function viewAllEmployees() {
+  connection.query("SELECT * FROM employees", (error, res) => {
+    if (error) console.log(error);
+    console.log("\nEMPLOYEES TABLE:");
+    console.table(res);
+    console.log("\n");
+    setTimeout(function () {
+      startInitChoices();
+    }, 1000);
+  });
+}
 
 //make update/remove functions for each category below=======================================================
 
