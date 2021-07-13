@@ -60,19 +60,23 @@ VALUES
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
-  ("Ben", "John", 1, 1);
+  ("Already", "A Manager", 2, null);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
-  ("Sarah", "Doe", 2, 2);
+  ("Ben", "John", 1, null);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
-  ("Jake", "Anderson", 3, 3);
+  ("Sarah", "Doe", 2, null);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
-  ("Bill", "Ted", 4, 4);
+  ("Jake", "Anderson", 3, null);
+INSERT INTO
+  employees(first_name, last_name, role_id, manager_id)
+VALUES
+  ("Bill", "Ted", 4, null);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES

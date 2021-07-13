@@ -297,7 +297,7 @@ function viewAllEmployees() {
   });
 }
 
-//update departments function=======================================================
+//update function=======================================================
 async function updateRole() {
   const rolesData = await connection.query("SELECT * FROM roles");
   const rolesArray = rolesData.map((roles) => ({

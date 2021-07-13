@@ -28,11 +28,11 @@
 // todo: :DONE: create db that can be connected to and perform queries
 // todo: :DONE: use inquirer to interact with the user via the command line interface
 // todo: :DONE: Use console.table to print MySQL rows to the console.
-// IMPORTANT:todo: have a separate file containing functions for performing specific SQL queries you'll need to use.
+// IMPORTANTtodo: have a separate file containing functions for performing specific SQL queries you'll need to use.
 //       Could a constructor function or a class be helpful for organizing these?
 // NOTE: todo: You will need to perform a variety of SQL JOINS to complete this assignment, and it's recommended you review
 //       the week's activities if you need a refresher on this.
-// NOTE: You may wish to include a seed.sql file to pre-populate your database. This will make development of individual features much easier.
+// NOTE: :DONE: You may wish to include a seed.sql file to pre-populate your database. This will make development of individual features much easier.
 // NOTE: Focus on getting the basic functionality completed before working on more advanced features.
 // NOTE: Review the week's activities for a refresher on MySQL.
 // NOTE: Check out SQL Bolt for some extra MySQL help.
