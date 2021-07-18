@@ -36,7 +36,7 @@ async function startInitChoices() {
       choices: [
         "View ALL Roles",
         "Add Role",
-        "Update Role",
+        // "Update Role",
         "Remove Role",
         "back",
       ],
@@ -90,9 +90,9 @@ async function startInitChoices() {
       addRole();
       break;
 
-    case "Update Role":
-      updateRole();
-      break;
+    // case "Update Role":
+    //   updateEmployeeRole();
+    //   break;
 
     case "Remove Role":
       removeRole();
@@ -115,7 +115,7 @@ async function startInitChoices() {
       break;
 
     case "Update Employee":
-      updateEmployee();
+      updateEmployeeRole();
       break;
 
     case "Remove Employee":
@@ -285,6 +285,22 @@ function viewAllRoles() {
   });
 }
 // view employees db data in a table format===================================================================
+//IMPORTANTTODO: started mysql join getting syntax error come back later for now use console.table
+// async function viewAllEmployees() {
+//   await connection.query(
+//     "SELECT employees.role_id FROM employees INNER JOIN roles ON roles.title=employees.role_id",
+//     (error, res) => {
+//       if (error) console.log(error);
+
+//       console.log("\nEMPLOYEES TABLE:");
+//       console.table(res);
+//       console.log("\n");
+//       setTimeout(function () {
+//         startInitChoices();
+//       }, 1000);
+//     }
+//   );
+// }
 function viewAllEmployees() {
   connection.query("SELECT * FROM employees", (error, res) => {
     if (error) console.log(error);
@@ -298,16 +314,48 @@ function viewAllEmployees() {
 }
 
 //update function=======================================================
-async function updateRole() {
+async function updateEmployeeRole() {
+  //employee data for update:
+  const employeesFromDb = await connection.query("SELECT * FROM employees");
+  const employeesTableArray = employeesFromDb.map((employees) => ({
+    name: `${employees.first_name} ${employees.last_name}`,
+    value: employees.id,
+  }));
+  //roles data for update:
   const rolesData = await connection.query("SELECT * FROM roles");
-  const rolesArray = rolesData.map((roles) => ({
+  const rolesTableArray = rolesData.map((roles) => ({
     name: roles.title,
     value: roles.id,
   }));
+  const whichRoleToUpdate = await inquirer.prompt([
+    {
+      type: "list",
+      name: "chooseEmployeeToUpdate",
+      message: "Select an employee to update:",
+      choices: employeesTableArray,
+    },
+    {
+      type: "list",
+      name: "chooseRoleToUpdate",
+      message: "Select new role:",
+      choices: rolesTableArray,
+    },
+  ]);
+  connection.query("UPDATE employees SET role_id = ? WHERE id = ?", [
+    whichRoleToUpdate.chooseRoleToUpdate,
+    whichRoleToUpdate.chooseEmployeeToUpdate,
+  ]);
+  console.log(`================ Role successfully change. ================  `);
+  setTimeout(function () {
+    startInitChoices();
+  }, 1000);
 }
 
 // exit function =============================================================================================
 function exitProgram() {
+  console.log(
+    "========================.PROGRAM CLOSED.========================"
+  );
   connection.end();
   process.exit();
 }

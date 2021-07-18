@@ -18,16 +18,18 @@ CREATE TABLE employees(
   id INT NOT NULL AUTO_INCREMENT,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
-  role_id INT NOT NULL,
+  role_id INT,
   manager_id INT,
   PRIMARY KEY (id),
   FOREIGN KEY (role_id) REFERENCES roles(id),
   FOREIGN KEY (manager_id) REFERENCES employees(id)
 );
+-- department COLUMNs ------------------------------------------
 INSERT INTO
   departments(department_name)
 VALUES
   ("Sales"),("Legal"),("Finance"),("Engineering");
+-- roles COLUMNs -----------------------------------------------
 INSERT INTO
   roles(title, salary, department_id)
 VALUES
@@ -57,10 +59,12 @@ INSERT INTO
   roles(title, salary, department_id)
 VALUES
   ("Engineer", 80000, 4);
+-- employees COLUMNs ------------------------------------------
+  -- manager emplyee is actually a way to choose an emplyee as a manager may remove oon final release
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES
-  ("Already", "A Manager", 2, null);
+  ("Manager", "", null, null);
 INSERT INTO
   employees(first_name, last_name, role_id, manager_id)
 VALUES

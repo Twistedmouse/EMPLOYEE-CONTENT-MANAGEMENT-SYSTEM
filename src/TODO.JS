@@ -28,7 +28,7 @@
 // todo: :DONE: create db that can be connected to and perform queries
 // todo: :DONE: use inquirer to interact with the user via the command line interface
 // todo: :DONE: Use console.table to print MySQL rows to the console.
-// IMPORTANTtodo: have a separate file containing functions for performing specific SQL queries you'll need to use.
+// IMPORTANTtodo: have a separate file containing functions for performing specific SQL queries you'll need to use. NOTE:do at the end once all functions are working
 //       Could a constructor function or a class be helpful for organizing these?
 // NOTE: todo: You will need to perform a variety of SQL JOINS to complete this assignment, and it's recommended you review
 //       the week's activities if you need a refresher on this.
