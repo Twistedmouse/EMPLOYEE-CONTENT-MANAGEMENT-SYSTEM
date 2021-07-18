@@ -15,13 +15,13 @@
 // todo: :DONE:View departments, roles, employees
 //      task: :DONE:choices: view by - department_id, role_id or employees.
 //            output: displays a table in the terminal with chosen data.
-// todo: Update employee roles
-//      task: WHEN: update is chosen.
+// todo: :DONE:Update employee roles
+//      task::DONE: WHEN: update is chosen.
 //            THEN: each choice of employees is listed.
-//            THEN: list role or department.
-//            THEN: input the updated information.
-//      todo: remove employee (included in update)
-//           task: WHEN: remove is selected from the terminal.
+//            THEN: list role.
+//            THEN: input the updated information.(not in this release.)
+// todo: remove employee (included in update)
+//      task: WHEN: remove is selected from the terminal.
 //            THEN: employee object is removed from list todo: and db
 
 // TODO: create data base to the spec in mysql.

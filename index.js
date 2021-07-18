@@ -345,11 +345,44 @@ async function updateEmployeeRole() {
     whichRoleToUpdate.chooseRoleToUpdate,
     whichRoleToUpdate.chooseEmployeeToUpdate,
   ]);
-  console.log(`================ Role successfully change. ================  `);
+  console.log(
+    `\n================ Role successfully change. ================  `
+  );
   setTimeout(function () {
     startInitChoices();
   }, 1000);
 }
+
+// remove functions ==========================================================================================
+// function removeDepartment()
+async function removeRole() {
+  const rolesData = await connection.query("SELECT * FROM roles");
+  const rolesTableArray = rolesData.map((roles) => ({
+    name: roles.title,
+    value: roles.id,
+  }));
+  await inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "removeRoleItem",
+        message: "Select the role you would like to remove:",
+        choices: rolesTableArray,
+      },
+    ])
+    .then(async (selection) => {
+      await connection.query(
+        `DELETE FROM roles WHERE id=${selection.removeRoleItem}`
+      );
+      console.log(
+        `\n================== Item has been removed from roles. ==================`
+      );
+      setTimeout(function () {
+        viewAllRoles();
+      }, 1000);
+    });
+}
+// function removeEmployee()
 
 // exit function =============================================================================================
 function exitProgram() {
