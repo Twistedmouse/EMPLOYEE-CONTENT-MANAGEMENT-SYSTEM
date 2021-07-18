@@ -295,43 +295,36 @@ function viewAllDepartments() {
 
 // view roles db data in a table format=======================================================================
 function viewAllRoles() {
-  connection.query("SELECT * FROM roles", (error, res) => {
-    if (error) console.error(error);
-    console.log("\nROLES TABLE:");
-    console.table(res);
-    console.log("\n");
-    setTimeout(function () {
-      startInitChoices();
-    }, 1000);
-  });
+  const joinRolesTable =
+    connection.query(`SELECT roles.id as id, roles.title as title, roles.salary as Salary, roles.department_id as 'Department ID', departments.department_name as Department
+  FROM employee_contentdb.roles
+  INNER JOIN departments ON roles.department_id=departments.department_name`);
+  console.log("\nROLES TABLE:");
+  console.table(joinRolesTable);
+  console.log("\n");
+  setTimeout(function () {
+    startInitChoices();
+  }, 1000);
 }
+
 // view employees db data in a table format===================================================================
 //IMPORTANTTODO: started mysql join getting syntax error come back later for now use console.table
-// async function viewAllEmployees() {
-//   await connection.query(
-//     "SELECT employees.role_id FROM employees INNER JOIN roles ON roles.title=employees.role_id",
-//     (error, res) => {
-//       if (error) console.log(error);
+async function viewAllEmployees() {
+  const joinEmployeesTable =
+    await connection.query(`SELECT employees.id as ID, employees.first_name as 'First Name', employees.last_name as 'Last Name', roles.title as Role, roles.salary as Salary,  departments.department_name as Department
+  FROM employee_contentdb.roles
+  INNER JOIN employees ON roles.id=employees.role_id
+  INNER JOIN departments ON roles.department_id=departments.id
+  
+  `);
+  //INNER JOIN employees ON employees.id=employees.manager_id <-- dosnt work as intended try again later for display manager name in table
 
-//       console.log("\nEMPLOYEES TABLE:");
-//       console.table(res);
-//       console.log("\n");
-//       setTimeout(function () {
-//         startInitChoices();
-//       }, 1000);
-//     }
-//   );
-// }
-function viewAllEmployees() {
-  connection.query("SELECT * FROM employees", (error, res) => {
-    if (error) console.log(error);
-    console.log("\nEMPLOYEES TABLE:");
-    console.table(res);
-    console.log("\n");
-    setTimeout(function () {
-      startInitChoices();
-    }, 1000);
-  });
+  console.log("\nEMPLOYEES TABLE:");
+  console.table(joinEmployeesTable);
+  console.log("\n");
+  setTimeout(function () {
+    startInitChoices();
+  }, 1000);
 }
 
 //update function=======================================================
