@@ -409,7 +409,33 @@ async function removeRole() {
       }, 1000);
     });
 }
-//async function removeEmployee()
+async function removeEmployee() {
+  const employeesData = await connection.query("SELECT * FROM employees");
+  const employeesTableArray = employeesData.map((employees) => ({
+    name: `${employees.first_name} ${employees.last_name}`,
+    value: employees.id,
+  }));
+  await inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "removeEmployeeItem",
+        message: "Select the role you would like to remove:",
+        choices: employeesTableArray,
+      },
+    ])
+    .then(async (selection) => {
+      await connection.query(
+        `DELETE FROM employees WHERE id=${selection.removeEmployeeItem}`
+      );
+      console.log(
+        `\n================== Item has been removed from employees. ==================`
+      );
+      setTimeout(function () {
+        viewAllEmployees();
+      }, 1000);
+    });
+}
 
 // exit function =============================================================================================
 function exitProgram() {
