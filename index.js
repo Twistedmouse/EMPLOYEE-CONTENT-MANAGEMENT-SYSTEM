@@ -354,7 +354,34 @@ async function updateEmployeeRole() {
 }
 
 // remove functions ==========================================================================================
-// function removeDepartment()
+async function removeDepartment() {
+  const DepartmentsData = await connection.query("SELECT * FROM departments");
+  const departmentsTableArray = DepartmentsData.map((departments) => ({
+    name: departments.department_name,
+    value: departments.id,
+  }));
+  await inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "removeDepartmentItem",
+        message: "Select the department you would like to remove:",
+        choices: departmentsTableArray,
+      },
+    ])
+    .then(async (selection) => {
+      await connection.query(
+        `DELETE FROM departments WHERE id=${selection.removeDepartmentItem}`
+      );
+      console.log(
+        `\n================== Item has been removed from departments. ==================`
+      );
+      setTimeout(function () {
+        viewAllDepartments();
+      }, 1000);
+    });
+}
+
 async function removeRole() {
   const rolesData = await connection.query("SELECT * FROM roles");
   const rolesTableArray = rolesData.map((roles) => ({
@@ -382,7 +409,7 @@ async function removeRole() {
       }, 1000);
     });
 }
-// function removeEmployee()
+//async function removeEmployee()
 
 // exit function =============================================================================================
 function exitProgram() {
