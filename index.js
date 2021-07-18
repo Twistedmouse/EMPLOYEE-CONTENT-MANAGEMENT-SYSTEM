@@ -213,8 +213,13 @@ async function addEmployee() {
       name: role.title,
       value: role.id,
     }));
-    // const employeeArrayFromDb = await connection.query("SELECT * FROM roles");
-    // const employeeArray = employeeArrayFromDb.map((role) => ({ role.manager_id }));
+    const employeeArrayFromDb = await connection.query(
+      "SELECT * FROM employees"
+    );
+    const employeeArray = employeeArrayFromDb.map((employees) => ({
+      name: `${employees.first_name} ${employees.last_name}`,
+      value: employees.id,
+    }));
 
     const addEmployeeRequest = await inquirer.prompt([
       {
@@ -233,12 +238,28 @@ async function addEmployee() {
         message: "Pease select this employees role:",
         choices: rolesArray,
       },
-      // { IMPORTANTTODO:
-      //are you the manager/ who is the employees manager prompt?
-      //if true make role_id manager_id if false make null try list:choices:manger? not manager?
-      // },
+      {
+        type: "list",
+        name: "isManager",
+        message: "Is this employee a manager:",
+        choices: ["YES", "NO"],
+      },
     ]);
-    console.log(addEmployeeRequest);
+    if (addEmployeeRequest.isManager === "NO") {
+      console.log("================MADE IT=================");
+      const mangerIs = await inquirer.prompt([
+        {
+          type: "list",
+          name: "managerIsWho",
+          message: "Select the manager of this employee:",
+          choices: employeeArray,
+        },
+      ]);
+      addEmployeeRequest.manager_id = mangerIs.managerIsWho;
+    } else {
+      addEmployeeRequest.manager_id = null;
+    }
+    // console.log(addEmployeeRequest);
     const query = await connection.query(
       "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
       [
