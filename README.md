@@ -41,7 +41,7 @@ Run `npm start` to begin and follow the prompts to make a selection on what you 
 
 ### Video walkthrough:
 
-<a href="https://drive.google.com/file/d/1G9FC-VyTtIXoxE0dK6uLWwV529kKW4sU/view?usp=sharing" rel="nofollow"><img src="assets/videoPlaceHolder.png" alt="Watch the video" style="max-width:100%;"></a>
+<a href="https://drive.google.com/file/d/1G9FC-VyTtIXoxE0dK6uLWwV529kKW4sU/view?usp=sharing" rel="nofollow"><img src="assets/demo.png" alt="Watch the video" style="max-width:100%;"></a>
 
 ### Screenshots:
 
