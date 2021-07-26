@@ -2,6 +2,7 @@ require("dotenv").config();
 const inquirer = require("inquirer");
 const util = require("util");
 const connection = require("./config/connection");
+// const addDepartment = require("./lib/js/add"); <-- make js files for each function if have time
 
 // connects to the connection and makes connection.query work as a promise=================================
 connection.connect();
@@ -294,11 +295,11 @@ function viewAllDepartments() {
 }
 
 // view roles db data in a table format=======================================================================
-function viewAllRoles() {
-  const joinRolesTable =
-    connection.query(`SELECT roles.id as id, roles.title as title, roles.salary as Salary, roles.department_id as 'Department ID', departments.department_name as Department
-  FROM employee_contentdb.roles
-  INNER JOIN departments ON roles.department_id=departments.department_name`);
+async function viewAllRoles() {
+  let joinRolesTable = [];
+  joinRolesTable = await connection.query(
+    `SELECT roles.id as id, roles.title as title, roles.salary as Salary, departments.department_name as Department FROM roles INNER JOIN departments ON roles.department_id=departments.id`
+  );
   console.log("\nROLES TABLE:");
   console.table(joinRolesTable);
   console.log("\n");
@@ -307,17 +308,12 @@ function viewAllRoles() {
   }, 1000);
 }
 
-// view employees db data in a table format===================================================================
-//IMPORTANTTODO: started mysql join getting syntax error come back later for now use console.table
+// view employees db data in a table format=====================================================================
 async function viewAllEmployees() {
-  const joinEmployeesTable =
-    await connection.query(`SELECT employees.id as ID, employees.first_name as 'First Name', employees.last_name as 'Last Name', roles.title as Role, roles.salary as Salary,  departments.department_name as Department
-  FROM employee_contentdb.roles
-  INNER JOIN employees ON roles.id=employees.role_id
-  INNER JOIN departments ON roles.department_id=departments.id
-  
-  `);
-  //INNER JOIN employees ON employees.id=employees.manager_id <-- dosnt work as intended try again later for display manager name in table
+  const joinEmployeesTable = await connection.query(
+    `SELECT emp.id as ID, emp.first_name as 'First Name', emp.last_name as 'Last Name', roles.title as Role, roles.salary as Salary,  departments.department_name as Department, emp.manager_id as Manager FROM employees emp INNER JOIN roles ON emp.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id WHERE emp.manager_id IS NULL UNION
+    SELECT emp.id as ID, emp.first_name as 'First Name', emp.last_name as 'Last Name', roles.title as Role, roles.salary as Salary,  departments.department_name as Department, concat(mgr.first_name, " ", mgr.last_name) as Manager FROM employees emp INNER JOIN employees mgr ON emp.manager_id=mgr.id INNER JOIN roles ON emp.role_id=roles.id INNER JOIN departments ON roles.department_id=departments.id`
+  );
 
   console.log("\nEMPLOYEES TABLE:");
   console.table(joinEmployeesTable);
